@@ -11,18 +11,17 @@
 
 nav:
   # Navigation bar logo image
+  logo:
   display_title: true
+  display_post_title: true
   # Whether to fix navigation bar
   fixed: false
 
 menu:
-  Home: / || fas fa-home
-  Archives: /archives/ || fas fa-archive
-  About Me: /about/ || fas fa-person
-  # More: 
-  #   Gallery: /gallery/ || fas fa-image
-  #   Certificate: /certificate/ || fas fa-certificate
-  #   Diary: /diary/ || fas fa-book
+  # Home: / || fas fa-home
+  # List||fas fa-list:
+  #   Music: /music/ || fas fa-music
+  #   Movie: /movies/ || fas fa-video
 
 # --------------------------------------
 # Code Blocks Settings
@@ -30,7 +29,7 @@ menu:
 
 code_blocks:
   # Code block theme: darker / pale night / light / ocean / false
-  theme: light
+  theme: darker
   macStyle: false
   # Code block height limit (unit: px)
   height_limit: false
@@ -54,10 +53,10 @@ social:
 # Image Settings
 # --------------------------------------
 
-favicon: /img/avatar.jpg
+favicon: /img/favicon/favicon.ico
 
 avatar:
-  img: /img/avatar.jpg
+  img: /img/avatar/lucy.jpg
   effect: false
 
 # Disable all banner images
@@ -89,11 +88,11 @@ category_img:
 category_per_img:
 
 # The background image of footer
-footer_img: false
+footer_img: black
 
 # Website Background
 # Can set it to color or image url
-background:
+background: /img/background/cyberpunk.png
 
 cover:
   # Disable the cover or not
@@ -107,13 +106,13 @@ cover:
 # Replace Broken Images
 error_img:
   flink: /img/friend_404.gif
-  post_page: /img/404.jpg
+  post_page: /img/error/404.jpg
 
 # A simple 404 page
 error_404:
   enable: false
   subtitle: 'Page Not Found'
-  background: /img/error-page.png
+  background: /img/error/error-page.png
 
 post_meta:
   # Home Page
@@ -148,8 +147,8 @@ index_site_info_top:
 index_top_img_height:
 
 # The subtitle on homepage
-subtitle:
-  enable: false
+subtitle: 
+  enable: true
   # Typewriter Effect
   effect: true
   # Customize typed.js
@@ -164,7 +163,7 @@ subtitle:
   # 3 - jinrishici.com
   source: false
   # If you close the typewriter effect, the subtitle will only show the first line of sub
-  sub:
+  sub: 
 
 # Article layout on the homepage
 # 1: Cover on the left, info on the right
@@ -255,16 +254,17 @@ noticeOutdate:
 # --------------------------------------
 # Footer Settings
 # --------------------------------------
-footer: 
+footer:
   nav:
   owner:
-    enable: false
+    enable: true
     since: 2025
   # Copyright of theme and framework
   copyright:
-    enable: false
-    version: false
-  custom_text: 
+    enable: true
+    version: true
+  custom_text: Hope you like my profile
+
 # --------------------------------------
 # Aside Settings
 # --------------------------------------
@@ -287,11 +287,11 @@ aside:
     button:
       enable: true
       icon: fab fa-github
-      text: Don't follow Me
-      link: https://github.com/Ld4vicl
+      text: Follow Me
+      link: https://github.com/vuk3r
   card_announcement:
     enable: true
-    content: Welcome to entry here !
+    content: <a href="/about/">>_$(whoami)</a>
   card_recent_post:
     enable: true
     # If set 0 will show all
@@ -780,8 +780,8 @@ text_align_justify: false
 
 # Add a mask to the header and footer
 mask:
-  header: true
-  footer: true
+  header: false
+  footer: false
 
 # Loading Animation
 preloader:
@@ -797,7 +797,7 @@ preloader:
 enter_transitions: true
 
 # Default display mode - light (default) / dark
-display_mode: light
+display_mode: dark
 
 # Configuration for beautifying the content of the article
 beautify:
@@ -812,15 +812,15 @@ beautify:
 # Global font settings
 # Don't modify the following settings unless you know how they work
 font:
-  global_font_size:
-  code_font_size:
-  font_family:
-  code_font_family:
+  global_font_size: # Recommended size for Press Start 2P (crisp rendering)
+  code_font_size:  # Suitable for code blocks, test for legibility
+  font_family:   # Fallback to sans-serif
+  code_font_family:    # Fallback to monospace for code
 
 # Font settings for the site title and site subtitle
 blog_title_font:
-  font_link:
-  font_family:
+  font_link: 
+  font_family: 
 
 # The setting of divider icon
 hr_icon:
@@ -834,7 +834,7 @@ hr_icon:
 activate_power_mode:
   enable: false
   colorful: true
-  shake: true
+  shake: true 
   mobile: false
 
 # Background effects
@@ -930,7 +930,7 @@ mermaid:
   code_write: false
   # built-in themes: default / forest / dark / neutral
   theme:
-    light: default
+    light: dark
     dark: dark
 
 # chartjs
@@ -1042,8 +1042,9 @@ css_prefix: true
 # Insert the code to head (before '</head>' tag) and the bottom (before '</body>' tag)
 inject:
   head:
-    # - <link rel="stylesheet" href="/xxx.css">
-  bottom:
+    # - <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    # - <link rel="stylesheet" href="/css/custom.css">
+  bottom: 
     # - <script src="xxxx"></script>
 
 # CDN Settings

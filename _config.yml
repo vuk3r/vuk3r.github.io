@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Ld4vicl
-subtitle: 'subtitle'
-description: "Learn what we hacked,<br>hack what we can't"
+title: vuk3r
+subtitle: ''
+description: "Learn what we hacked<br>hack what we can't"
 keywords: 'keyword'
-author: Ld4vicl
+author: vuk3r
 language: en
 timezone: 'Asia/Ho_Chi_Minh'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://Ld4vicl.github.io
+url: https://vuk3r.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -101,4 +101,6 @@ theme: butterfly
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+    type: git
+    repo: https://github.com/vuk3r/vuk3r.github.io.git
+    branch: main
