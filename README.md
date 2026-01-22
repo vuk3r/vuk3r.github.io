@@ -66,3 +66,10 @@ Nếu Git yêu cầu đăng nhập, dùng **GitHub Personal Access Token (PAT)**
 Theme đang dùng: `butterfly` (cấu hình chính ở `_config.butterfly.yml`).
 
 
+Quy trình làm việc từ giờ:
+Làm việc trên main (viết bài, sửa config, ...)
+Commit và push lên main:
+   git add .   git commit -m "Your message"   git push origin main
+Workflow tự động build và deploy lên gh-pages
+Site sẽ có tại https://vuk3r.github.io
+Workflow đã sẵn sàng. Source code được giữ trên main, và site được deploy từ gh-pages.
