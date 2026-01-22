@@ -39,6 +39,7 @@ jobs:
         run: |
           npx hexo clean
           npx hexo generate
+          touch public/.nojekyll
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
