@@ -40,6 +40,8 @@ jobs:
           npx hexo clean
           npx hexo generate
           touch public/.nojekyll
+          echo "Build completed. Files in public:"
+          ls -la public/ | head -20
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
@@ -47,4 +49,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: ./public
+          keep_files: false
+          force_orphan: false
 
