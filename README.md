@@ -11,65 +11,66 @@
 npm install
 ```
 
-## Thêm bài viết mới
+## Quy trình viết post mới
 
-- Bài viết nằm ở: `source/_posts/`
+### Bước 1: Tạo file post mới
 
-Tạo bài mới (tự sinh front-matter):
+Tạo file Markdown mới với front-matter tự động:
 
 ```bash
 npx hexo new post "tieu-de-bai-viet"
 ```
 
-Sau đó sửa nội dung trong file mới tạo ở `source/_posts/`.
+File sẽ được tạo tại: `source/_posts/tieu-de-bai-viet.md`
 
-## Chạy local để xem trước
+### Bước 2: Viết nội dung
+
+Mở file vừa tạo và chỉnh sửa:
+
+- Sửa front-matter (title, date, tags, categories, ...)
+- Viết nội dung Markdown bên dưới
+
+### Bước 3: Xem trước (tùy chọn)
+
+Chạy server local để xem trước:
 
 ```bash
 npm run clean
 npm run server
 ```
 
-Mở `http://localhost:4000/`.
+Mở `http://localhost:4000/` để xem.
 
-## Build để deploy
+### Bước 4: Push lên GitHub để cập nhật
 
-```bash
-npm run clean
-npm run build
-```
-
-Output nằm ở thư mục `public/`.
-
-## Deploy lên GitHub Pages
-
-Đảm bảo `_config.yml` đã đúng:
-
-- `url: https://vuk3r.github.io`
-- `deploy.repo: https://github.com/vuk3r/vuk3r.github.io.git`
-- `deploy.branch: main`
-
-Chạy deploy:
+Commit và push lên `main`:
 
 ```bash
-npm run deploy
+git add source/_posts/tieu-de-bai-viet.md
+git commit -m "Add post: tieu-de-bai-viet"
+git push origin main
 ```
 
-Nếu Git yêu cầu đăng nhập, dùng **GitHub Personal Access Token (PAT)** thay cho password:
+**GitHub Actions sẽ tự động:**
+- Build site từ source code
+- Deploy lên branch `gh-pages`
+- Site sẽ cập nhật tại `https://vuk3r.github.io`
 
-- GitHub → Settings → Developer settings → Personal access tokens
-- Tạo token và cấp quyền phù hợp (thường cần quyền push repo)
-- Khi Git hỏi mật khẩu, dán token vào
+## Xóa post
+
+Xóa file Markdown trong `source/_posts/`, sau đó:
+
+```bash
+git add source/_posts/
+git commit -m "Remove post: ten-bai"
+git push origin main
+```
 
 ## Theme
 
 Theme đang dùng: `butterfly` (cấu hình chính ở `_config.butterfly.yml`).
 
+## Cấu trúc branch
 
-Quy trình làm việc từ giờ:
-Làm việc trên main (viết bài, sửa config, ...)
-Commit và push lên main:
-   git add .   git commit -m "Your message"   git push origin main
-Workflow tự động build và deploy lên gh-pages
-Site sẽ có tại https://vuk3r.github.io
-Workflow đã sẵn sàng. Source code được giữ trên main, và site được deploy từ gh-pages.
+- **`main`**: Chứa source code (Markdown, config, themes)
+- **`gh-pages`**: Chứa built files (HTML, CSS, JS) - tự động tạo bởi workflow
