@@ -1,0 +1,58 @@
+name: Deploy Hexo to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: |
+          npx hexo clean
+          npx hexo generate
+          touch public/.nojekyll
+
+      - name: Deploy to main
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git checkout --orphan deploy-main || git checkout -b deploy-main
+          git rm -rf --cached . 2>/dev/null || true
+          find . -maxdepth 1 -not -name '.' -not -name '.git' -not -name 'public' -exec rm -rf {} + 2>/dev/null || true
+          cp -r public/* . 2>/dev/null || true
+          cp public/.nojekyll . 2>/dev/null || true
+          rm -rf public
+          git add -A
+          git commit -m "Deploy: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || exit 0
+          git push origin deploy-main:main --force
+
