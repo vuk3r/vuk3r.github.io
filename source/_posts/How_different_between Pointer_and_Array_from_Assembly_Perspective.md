@@ -1,7 +1,7 @@
 ---
 title: '[Dummy] - How different between Pointer and Array from Assembly Perspective ? '
 tag: ['Dummy']
-cover: /img/post/dummy/different between Pointer and Array/thumbnail.png
+cover: /img/post/dummy/different-between-Pointer-and-Array/thumbnail.png
 category: ['Dummy']
 date: 2025-8-17 00:14:35
 author:
