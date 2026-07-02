@@ -64,9 +64,9 @@ Và ta cần chú ý các trường quan trọng :
 
 `_IO_read_ptr:` Con trỏ dùng để trỏ đến các byte tiếp theo sẽ được đọc trong bộ đệm
 
-`_IO_read_end:` Con trỏ chỉ đầu vùng bộ đệm sẽ được đọc
+`_IO_read_end:` Con trỏ chỉ cuối vùng bộ đệm sẽ được đọc
 
-`_IO_read_base:` Con trỏ chỉ cuối vùng bộ đệm sẽ được đọc
+`_IO_read_base:` Con trỏ chỉ đầu vùng bộ đệm sẽ được đọc
 
 `_IO_write_base:` Con trỏ chỉ đầu vùng bộ đệmsẽ được ghi
 
@@ -96,17 +96,17 @@ Và ta cần chú ý các trường quan trọng :
 
 Xét 6 trường của _IO_FILE : `_IO_read_ptr, _IO_read_base, _IO_read_end, _IO_buf_base, _IO_buf_end`
 
-từ `buf_base` đến `buf_end` hãy hình dung nó là internal buffer hỗ trợ cho cấu trúc _IO_FILE, nó được sài chung cho `fread()` và `fwrite()`, thường được cấp phát bằng 1 page, khoảng 0x1000 byte. còn với `read_ptr` và `read_end` là số lượng byte sẽ được đọc từ file để vào  `dst` với mỗi syscall, đọc tối đa 1 khoảng ≤ (`buf_end - buf_base`). 
+từ `buf_base` đến `buf_end` hãy hình dung nó là internal buffer hỗ trợ cho cấu trúc _IO_FILE, nó được sài chung cho `fread()` và `fwrite()`, thường được cấp phát bằng 1 page, khoảng 0x1000 byte. còn với `read_ptr` và `read_end` là số lượng byte sẽ được đọc từ file để vào  `dst` với mỗi syscall, đọc tối đa 1 khoảng ≤ (`buf_end - buf_base`).  
 
-Khi syscall read được gọi, đọc tối đa 0x1000 byte từ file vào vùng nhớ `read_base` và `read_end` ,
+Khi syscall read được gọi, đọc tối đa 0x1000 byte từ file vào vùng nhớ `buf_base`
 
-Lúc đó `read_base = buf_base` , `read_end *≤* buf_end` và *chỉ mới nạp vào bộ đệm chứ chưa đưa vào biến  `dst`, và đặt con trỏ `read_ptr = read_base`* 
+Lúc đó `read_base = buf_base` , `read_end *≤* buf_end` và *chỉ mới nạp vào bộ đệm chứ chưa đưa vào biến  `dst`, và đặt con trỏ `read_ptr* ≥ *read_base`* 
 
 với N là số byte sẽ lần lượt được copy vào, lần 1 copy vào thì `read_ptr += N`, tương tự cho đến khi hết được bộ đệm.
 
 `memcpy(dst, read_ptr, N)`
 
- con trỏ `read_ptr` có chức năng trỏ tới vùng nhớ cần copy tiếp trong `buf_base, buf_end`.Khi `read_ptr = buf_end`, gọi syscall read để reset lại các con trỏ, `read_base=buf_base, read_end ≤ buf_end` (giả sử ở đây là 0x200 byte < 0x1000 byte thì nó sẽ không nằm cùng với `buf_end`), `read_ptr = read_base` và tiếp tục cho lần copy vào dst tiếp theo.
+ con trỏ `read_ptr` có chức năng trỏ tới vùng nhớ cần copy tiếp trong `buf_base, buf_end`.Khi `read_ptr ≥ buf_end`, gọi syscall read để reset lại các con trỏ, `read_base=buf_base, read_end ≤ buf_end` (giả sử ở đây là 0x200 byte < 0x1000 byte thì nó sẽ không nằm cùng với `buf_end`), `read_ptr = read_base` và tiếp tục cho lần copy vào dst tiếp theo.
 
 ### Workflow chính
 
@@ -258,7 +258,7 @@ Nếu set `fileno = 0` ~ stdin
 - read_ptr = read_end → Trigger nhánh bên phải
 - buf_base = <address> → buf_base là địa chỉ mà ta muốn ghi vào
 - buf_end = <address+offset> → phục vụ cho việc nhập input
-- buffer_size = buf_end - buf_base ≥ N với N là số byte mà code yêu cầu, mục tiêu để trigger tới `read(fp->_fileno, buf_base, buffer_size)`
+- buffer_size = buf_end - buf_base > N với N là số byte mà code yêu cầu, mục tiêu để trigger `underflow` gọi tới `read(fp->_fileno, buf_base, buffer_size)`
 
 ## Đọc tại 1 vùng nhớ với fwrite
 
@@ -282,8 +282,8 @@ buf_base là 1 địa chỉ muốn đọc
 
 - Set giá trị `flag` để có thể đọc
 - `read_end = write_base` (đây là điều kiện để tránh hệ thống đi vào hàm lseek(), có khả năng làm payload ta truyền vào không hoạt động, debug sẽ thấy)
-- buf_base = <address> → buf_base là địa chỉ mà ta muốn in ra
-- buf_end = <address+offset> → phục vụ cho việc in ra output
+- `write_base` = <address> → buf_base là địa chỉ mà ta muốn in ra
+- `write_ptr` = <address+offset> → phục vụ cho việc in ra output
 
 ## Ret2win với vtable
 
@@ -324,7 +324,7 @@ buf_base là 1 địa chỉ muốn đọc
 
 Đại khái là với hàm fread() fwrite() bình thường nó sẽ gọi tới virtual table là  _IO_file_overflow, nhưng thằng này lại được valid bởi hệ thống bằng cách kiểm tra địa chỉ của vtable có phải thuộc vùng nhớ hệ thống hay không, nên nếu ghi đè nó bằng địa chỉ khác thì sẽ bị exit.
 
-Thay vào đó cũng có 1 thằng tựa như `_IO_FILE` đó là `wide_data`, cấu trúc gần giống, và cách gọi vtable cũng như `_IO_FILE` nhưng nếu đè vtable của nó bằng 1 fake vtable khác thì sẽ không detect được. hay ở chỗ là các offset gọi tới từ vtable cũng tựa nhau, nên không detect được. 
+Thay vào đó cũng có 1 thằng tựa như `_IO_FILE` đó là `wide_data`, cấu trúc gần giống, và cách gọi vtable cũng như `_IO_FILE` nhưng nếu gọi tới vtable của `wide_data` sẽ không bị validate và nếu thay vtable của nó bằng 1 fake vtable khác thì sẽ không detect được. hay ở chỗ là các offset gọi tới từ vtable cũng tựa nhau, nên không detect được. 
 
 Workflow của hướng attack là như này : 
 
