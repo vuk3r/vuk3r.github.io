@@ -96,7 +96,7 @@ Và ta cần chú ý các trường quan trọng :
 
 Xét 6 trường của _IO_FILE : `_IO_read_ptr, _IO_read_base, _IO_read_end, _IO_buf_base, _IO_buf_end`
 
-từ `buf_base` đến `buf_end` hãy hình dung nó là internal buffer hỗ trợ cho cấu trúc _IO_FILE, nó được sài chung cho `fread()` và `fwrite()`, thường được cấp phát bằng 1 page, khoảng 0x1000 byte. còn với `read_ptr` và `read_end` là số lượng byte sẽ được đọc từ file để vào  `dst` với mỗi syscall, đọc tối đa 1 khoảng ≤ (`buf_end - buf_base`).  
+từ `buf_base` đến `buf_end` hãy hình dung nó là internal buffer hỗ trợ cho cấu trúc _IO_FILE, nó được sài chung cho `fread()` và `fwrite()`, thường được cấp phát bằng 1 page, khoảng 0x1000 byte. còn với `read_ptr` tới `read_end` là số lượng byte sẽ được đọc từ file để vào  `dst` với mỗi syscall, đọc tối đa 1 khoảng ≤ (`buf_end - buf_base`).  
 
 Khi syscall read được gọi, đọc tối đa 0x1000 byte từ file vào vùng nhớ `buf_base`
 
@@ -106,7 +106,7 @@ với N là số byte sẽ lần lượt được copy vào, lần 1 copy vào t
 
 `memcpy(dst, read_ptr, N)`
 
- con trỏ `read_ptr` có chức năng trỏ tới vùng nhớ cần copy tiếp trong `buf_base, buf_end`.Khi `read_ptr ≥ buf_end`, gọi syscall read để reset lại các con trỏ, `read_base=buf_base, read_end ≤ buf_end` (giả sử ở đây là 0x200 byte < 0x1000 byte thì nó sẽ không nằm cùng với `buf_end`), `read_ptr = read_base` và tiếp tục cho lần copy vào dst tiếp theo.
+ con trỏ `read_ptr` có chức năng trỏ tới vùng nhớ cần copy tiếp trong `buf_base, buf_end`.Khi `read_ptr ≥ read_end`, gọi syscall read để reset lại các con trỏ, `read_base=buf_base, read_end ≤ buf_end` (giả sử ở đây là 0x200 byte < 0x1000 byte thì nó sẽ không nằm cùng với `buf_end`), `read_ptr = read_base` và tiếp tục cho lần copy vào dst tiếp theo.
 
 ### Workflow chính
 
@@ -258,7 +258,7 @@ Nếu set `fileno = 0` ~ stdin
 - read_ptr = read_end → Trigger nhánh bên phải
 - buf_base = <address> → buf_base là địa chỉ mà ta muốn ghi vào
 - buf_end = <address+offset> → phục vụ cho việc nhập input
-- buffer_size = buf_end - buf_base > N với N là số byte mà code yêu cầu, mục tiêu để trigger `underflow` gọi tới `read(fp->_fileno, buf_base, buffer_size)`
+- `buffer_size = buf_end - buf_base > N` với N là số byte mà code yêu cầu, mục tiêu để trigger `underflow` gọi tới `read(fp->_fileno, buf_base, buffer_size)`
 
 ## Đọc tại 1 vùng nhớ với fwrite
 
