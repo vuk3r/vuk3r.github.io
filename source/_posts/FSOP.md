@@ -70,9 +70,9 @@ Và ta cần chú ý các trường quan trọng :
 
 `_IO_write_base:` Con trỏ chỉ đầu vùng bộ đệmsẽ được ghi
 
-`_IO_write_ptr:` Con trỏ chỉ dùng để trỏ đến các byte tiếp theo sẽ được ghi trong bộ đệm
+`_IO_write_ptr:` Con trỏ này để xác định 2 cái với 2 biến còn lại, đó là `write_ptr - write_base` là số byte đã được copy từ biến `buf` vào `write_base`, `write_end - write_ptr` là số khoảng trống còn lại trong bộ đệm phục vụ cho việc ghi.
 
-`_IO_write_end:` Con trỏ chỉ cuối vùng bộ đệmsẽ được ghi
+`_IO_write_end:` Con trỏ chỉ cuối vùng bộ đệm sẽ được ghi
 
 `_IO_buf_base:` Con trỏ chỉ đầu vùng bộ đệm
 
@@ -96,28 +96,25 @@ Và ta cần chú ý các trường quan trọng :
 
 Xét 6 trường của _IO_FILE : `_IO_read_ptr, _IO_read_base, _IO_read_end, _IO_buf_base, _IO_buf_end`
 
-từ `buf_base` đến `buf_end` hãy hình dung nó là internal buffer hỗ trợ cho cấu trúc _IO_FILE, nó được sài chung cho `fread()` và `fwrite()`, thường được cấp phát bằng 1 page, khoảng 0x1000 byte. còn với `read_ptr` tới `read_end` là số lượng byte sẽ được đọc từ file để vào  `dst` với mỗi syscall, đọc tối đa 1 khoảng ≤ (`buf_end - buf_base`).  
+từ `buf_base` đến `buf_end` hãy hình dung nó là internal buffer hỗ trợ cho cấu trúc _IO_FILE, nó được sài chung cho `fread()` và `fwrite()`, thường được cấp phát bằng 1 page (~0x1000) byte.
 
 Khi syscall read được gọi, đọc tối đa 0x1000 byte từ file vào vùng nhớ `buf_base`
 
-Lúc đó `read_base = buf_base` , `read_end *≤* buf_end` và *chỉ mới nạp vào bộ đệm chứ chưa đưa vào biến  `dst`, và đặt con trỏ `read_ptr* ≥ *read_base`* 
+Lúc đó `read_base = buf_base` , `read_end *≤* buf_end` và *chỉ mới nạp vào bộ đệm chứ chưa đưa vào biến  `dst`, và đặt con trỏ `read_ptr = read_base`* 
 
-với N là số byte sẽ lần lượt được copy vào, lần 1 copy vào thì `read_ptr += N`, tương tự cho đến khi hết được bộ đệm.
+giả sử với mỗi lần copy thì sẽ dịch chuyển con trỏ `read_ptr` lên để copy tiếp, cho đến khi `read_ptr = read_end`
 
 `memcpy(dst, read_ptr, N)`
 
- con trỏ `read_ptr` có chức năng trỏ tới vùng nhớ cần copy tiếp trong `buf_base, buf_end`.Khi `read_ptr ≥ read_end`, gọi syscall read để reset lại các con trỏ, `read_base=buf_base, read_end ≤ buf_end` (giả sử ở đây là 0x200 byte < 0x1000 byte thì nó sẽ không nằm cùng với `buf_end`), `read_ptr = read_base` và tiếp tục cho lần copy vào dst tiếp theo.
+ con trỏ `read_ptr` có chức năng trỏ tới vùng nhớ cần copy tiếp trong `buf_base, buf_end`.Khi `read_ptr ≥ read_end`, gọi syscall read để reset lại các con trỏ hoặc để đọc trực tiếp từ `fd vào dst`, `read_base=buf_base, read_end ≤ buf_end` (giả sử ở đây là 0x200 byte < 0x1000 byte thì nó sẽ không nằm cùng với `buf_end`), `read_ptr = read_base` và tiếp tục cho lần copy vào dst tiếp theo. → số byte chưa copy từ read_ptr vào dst
 
 ### Workflow chính
 
 ```python
 have : số byte đã được nạp vào `read_base`, nhưng chưa được đọc vào `dst`.
-
 have = read_end - read_ptr
-
-remaining : số byte còn lại ở trong file chưa được nạp vào buf_base hay là dst, ví dụ 
-file có nội dung là “12345”, đã nạp vào `read_base` hoặc vào `dst` “123”, remaining là “45” 
-take : số byte sẽ được copy từ `read_ptr` vào `dst`
+want: số byte còn lại ở chưa copy từ buf_ptr vào dst, ví dụ:
+buf_ptr trỏ tới địa chỉ có chuỗi “12345”, đã copy vào `dst` “123”, want còn lại là “45” 
 
                     fread(dst, 1, N, fp)
                               │
@@ -164,16 +161,16 @@ Trước khi gọi syscall write, sẽ copy từ `src` vào vùng nhớ `write_b
 
 `memcpy(write_ptr, src, N)`
 
-Khi `write_ptr = write_end` , nghĩa là đã ghi được 0x1000 byte từ biến src vào `internal buffer` ,khi đó hàm `flush()` được gọi, đồng nghĩa gọi tới syscall write để đẩy toàn bộ dữ liệu từ `internal buffer` vào file. Và khi đó reset lại các con trỏ tương tự như hàm `fread()`
+Khi `write_ptr = write_end` , nghĩa là đã ghi được 0x1000 byte từ biến src vào `internal buffer` ,khi đó hàm `flush()` được gọi, đồng nghĩa gọi tới syscall write để đẩy toàn bộ dữ liệu từ internal buffer vào file. Và khi đó reset lại các con trỏ tương tự như hàm `fread()`.  
 
 ### Workflow chính
 
 ```python
 free_space : Write sẽ ghi từ `src` vào `write_base`, đây vùng nhớ trống, chưa được nạp vào trong `write_base`
 
-remaining : Là số byte vẫn chờ của `src` chưa được copy từ `src` vào `write_base`
+remaining : Là số byte chưa được copy từ `src` vào `write_base`
 
-take : số byte đã copy từ src vào `write_base`
+take : số byte sẽ copy từ src vào `write_base`
 
                     fwrite(src, 1, N, fp)
                               │
@@ -208,7 +205,7 @@ take : số byte đã copy từ src vào `write_base`
                                            ▼
                                   _IO_file_overflow
                                            │
-                            kiểm tra mode / flags / buffer
+                    kiểm tra mode / flags / buffer (kiểm tra buffer con chỗ                                                                không, nếu còn thì copy, nếu                                                            hết thì flush, reset con trỏ                                                            rồi mới copy, đây là hướng ta sẽ đi)
                                            │
                                            ▼
                                flush vùng pending:
@@ -234,7 +231,7 @@ tham khảo nguồn : [File Struct - Introduction - Google Trang trình bày
 
 # Cơ chế khai thác với _IO_FILE
 
-Giả sử ta ghi đè được các giá trị trong cấu trúc FILE *fp. Kiểm soát được các giá trị trong đó.
+Giả sử ta ghi đè được các giá trị trong cấu trúc `FILE *fp`. Kiểm soát được các giá trị trong đó.
 
 ## Ghi tại 1 vùng nhớ với fread
 
@@ -242,7 +239,7 @@ Khi đó goal của ta là ghi được giá trị vào 1 vùng nhớ tùy ý, v
 
 `read(fp->_fileno, buf_base, buffer_size)(1)`
 
-Nếu set `fileno = 0` ~ stdin
+Nếu set `fileno = 0` ~ `stdin`
 
 `buf_base` là 1 địa chỉ muốn ghi
 
@@ -252,13 +249,23 @@ Nếu set `fileno = 0` ~ stdin
 
 ⇒ Ta có thể điều hướng câu lệnh trên thành hàm nhập với địa chỉ tùy ý.
 
-Để đi được tới nhánh đó và để câu lệnh hoạt động như cách ta mong muốn thì cần setup điều kiện cụ thể :
+Để đi được tới nhánh đó và để câu lệnh hoạt động như cách ta mong muốn thì cần setup điều kiện cụ thể, giải thích đơn giản luồng muốn đi, đó là mình sẽ cần chương trình fill internal buffer, đồng nghĩa khi buffer cạn, nghĩa là khi read_ptr = read_end. Khi đó chương trình sẽ gọi 
+
+`read(fp→_fileno, buf_base, 0x1000)`
+
+và như đã nói ở trên thì mình điều khiển được 2 giá trị này nên sẽ biến nó thành luồng :
+
+`read(0, địa chỉ mình muốn ghi, 0x1000)`
+
+Điều kiện cụ thể để trigger đó là :
 
 - Set giá trị `flag` để có thể ghi
-- read_ptr = read_end → Trigger nhánh bên phải
-- buf_base = <address> → buf_base là địa chỉ mà ta muốn ghi vào
-- buf_end = <address+offset> → phục vụ cho việc nhập input
-- `buffer_size = buf_end - buf_base > N` với N là số byte mà code yêu cầu, mục tiêu để trigger `underflow` gọi tới `read(fp->_fileno, buf_base, buffer_size)`
+- read_ptr = read_end → Trigger nhánh fill `internal buffer`
+- buf_base = `address` → buf_base là địa chỉ mà ta muốn ghi vào
+- buf_end = `address+offset` → phục vụ cho việc điều chỉnh số lượng byte nhập từ input
+- `buffer_size = buf_end - buf_base > N` với N là số byte mà code yêu cầu, việc này bắt buộc chương trình đi qua internal buffer, vì giả sử `N=0x2000` byte, mà internal buffer tối đa chỉ được `0x1000` byte thì chương trình sẽ đọc trực tiếp : `read(fp→_fileno,src,0x2000)`
+
+Tóm lại là phải bắt nó sài internal buffer, khi đó nó sẽ sài địa chỉ `buf_base` - 1 địa chỉ do mình kiểm soát được để ghi.
 
 ## Đọc tại 1 vùng nhớ với fwrite
 
@@ -278,12 +285,13 @@ buf_base là 1 địa chỉ muốn đọc
 
 ⇒ Ta có thể điều hướng câu lệnh trên với địa chỉ tùy ý.
 
-Để đi được tới nhánh đó và để câu lệnh hoạt động như cách ta mong muốn thì cần setup điều kiện cụ thể :
+Để đi được tới nhánh đó và để câu lệnh hoạt động như cách ta mong muốn thì cũng cần setup điều kiện cụ thể, giải thích đơn giản là để đi được nhánh đó ta cần chỉnh địa chỉ của write_base thành địa chỉ muốn in ra và đợi hoặc ép nó flush dữ liệu, để chắc chắn nó flush dữ liệu thì ta phải làm cho write buffer cạn, không còn chỗ để copy vào internal buffer, nghĩa là set con trỏ `write_ptr = write_end` (ở đây ta bỏ qua điều kiện là còn byte chưa xử lí, vì nếu hết byte thì chương trình return trước thay vì flush dữ liệu), khi hết chỗ nó sẽ flush dữ liệu, reset con trỏ để phục vụ cho việc write tiếp. Khi đó điều kiện cụ thể như sau :
 
-- Set giá trị `flag` để có thể đọc
-- `read_end = write_base` (đây là điều kiện để tránh hệ thống đi vào hàm lseek(), có khả năng làm payload ta truyền vào không hoạt động, debug sẽ thấy)
-- `write_base` = <address> → buf_base là địa chỉ mà ta muốn in ra
-- `write_ptr` = <address+offset> → phục vụ cho việc in ra output
+- Set giá trị `flag` để có quyền write
+- `write_ptr = write_end` → ép nó flush dữ liệu
+- `read_end = write_base` → đây là điều kiện để tránh hệ thống đi vào hàm lseek(), có khả năng làm payload ta truyền vào không hoạt động, debug sẽ thấy.
+- `write_base` = <address> → buf_base là địa chỉ mà ta muốn in ra.
+- `write_ptr` = <address+offset> → phục vụ cho số lượng byte muốn in ra.
 
 ## Ret2win với vtable
 
