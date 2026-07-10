@@ -285,13 +285,13 @@ buf_base là 1 địa chỉ muốn đọc
 
 ⇒ Ta có thể điều hướng câu lệnh trên với địa chỉ tùy ý.
 
-Để đi được tới nhánh đó và để câu lệnh hoạt động như cách ta mong muốn thì cũng cần setup điều kiện cụ thể, giải thích đơn giản là để đi được nhánh đó ta cần chỉnh địa chỉ của write_base thành địa chỉ muốn in ra và đợi hoặc ép nó flush dữ liệu, để chắc chắn nó flush dữ liệu thì ta phải làm cho write buffer cạn, không còn chỗ để copy vào internal buffer, nghĩa là set con trỏ `write_ptr = write_end` (ở đây ta bỏ qua điều kiện là còn byte chưa xử lí, vì nếu hết byte thì chương trình return trước thay vì flush dữ liệu), khi hết chỗ nó sẽ flush dữ liệu, reset con trỏ để phục vụ cho việc write tiếp. Khi đó điều kiện cụ thể như sau :
+Để đi được tới nhánh đó và để câu lệnh hoạt động như cách ta mong muốn thì cũng cần setup điều kiện cụ thể, giải thích đơn giản là để đi được nhánh đó ta cần chỉnh địa chỉ của `write_base` thành địa chỉ muốn in ra và đợi hoặc ép nó flush dữ liệu, để chắc chắn nó flush dữ liệu thì ta phải làm cho write buffer cạn, không còn chỗ để copy vào internal buffer, nghĩa là set con trỏ `write_ptr = write_end` (ở đây ta bỏ qua điều kiện là còn byte chưa xử lí, vì nếu hết byte thì chương trình return trước thay vì flush dữ liệu), khi hết chỗ nó sẽ flush dữ liệu, reset con trỏ để phục vụ cho việc write tiếp. Khi đó điều kiện cụ thể như sau :
 
 - Set giá trị `flag` để có quyền write
 - `write_ptr = write_end` → ép nó flush dữ liệu
 - `read_end = write_base` → đây là điều kiện để tránh hệ thống đi vào hàm lseek(), có khả năng làm payload ta truyền vào không hoạt động, debug sẽ thấy.
-- `write_base` = <address> → buf_base là địa chỉ mà ta muốn in ra.
-- `write_ptr` = <address+offset> → phục vụ cho số lượng byte muốn in ra.
+- `write_base` = `address` → write_base là địa chỉ mà ta muốn in ra.
+- `write_ptr` = `address+offset` → phục vụ cho số lượng byte muốn in ra.
 
 ## Ret2win với vtable
 
